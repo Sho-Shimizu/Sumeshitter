@@ -24,6 +24,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "clear": "^0.1.0",
+    "cli-spinner": "^0.2.10",
     "clui": "^0.3.6",
     "figlet": "^1.2.1",
     "github": "^14.0.0",
@@ -32,6 +33,7 @@
     "minimist": "^1.2.0",
     "preferences": "^1.0.2",
     "simple-git": "^1.110.0",
-    "touch": "^3.1.0"
+    "touch": "^3.1.0",
+    "twitter": "^1.7.1"
   }
 }
