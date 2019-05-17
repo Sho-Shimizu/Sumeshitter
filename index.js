@@ -3,7 +3,6 @@ var clear = require('clear')
 var CLI = require('clui')
 var figlet = require('figlet')
 var inquirer = require('inquirer')
-var Preferences = require('preferences')
 var Spinner = CLI.Spinner
 var config = require('config')
 // var GitHubApi   = require('rest');
