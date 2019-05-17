@@ -4,4 +4,15 @@
 
 # Usage
 
-1. TODO(各キーの設定、ID の登録)
+1. config/default.json に consumer_key 等を設定
+
+```
+{
+  "consumer_key": "",
+  "consumer_secret": "",
+  "access_token_key": "",
+  "access_token_secret": ""
+}
+```
+
+2. npm start
