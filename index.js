@@ -8,13 +8,14 @@ var config = require('config')
 // var GitHubApi   = require('rest');
 var _ = require('lodash')
 var files = require('./lib/files')
+var fs = require('fs')
 
 // 設定系
 const status = new Spinner('Processing, please wait...')
 const Twitter = require('twitter')
 
 // 各キーを設定する
-const client = new Twitter({
+var client = new Twitter({
   consumer_key: config.consumer_key,
   consumer_secret: config.consumer_secret,
   access_token_key: config.access_token_key,
@@ -29,10 +30,98 @@ console.log(chalk.blue(figlet.textSync('Sumeshitter', { horizontalLayout: 'full'
 
 // メイン
 const index = async argv => {
+  if (config.consumer_key == undefined) {
+    const twitterConfig = await init()
+    // configファイル書き出し
+    try {
+      fs.writeFileSync('./config/default.json', JSON.stringify(twitterConfig, undefined, 2))
+
+      console.log('write end')
+      console.log('Please Restart Sumeshitter!')
+      process.exit()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const command = await question_command()
   await awaitFunction(command)
   // 再起呼び出し
   index()
+}
+
+// コマンド受付 hでヘルプ
+const init = async callback => {
+  return new Promise((resolve, reject) => {
+    var consumer_key = [
+      {
+        name: 'consumer_key',
+        type: 'input',
+        message: 'consumer_key',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please Command....'
+          } else if (value == 'h') {
+            var str = syan + '\n' + 'p: Post Tweet' + '\n' + 'v: View Tweet' + '\n' + 'f: Favorite Tweet' + '\n' + 'c: Clear Terminal' + '\n' + 'q: Quit Sumeshitter'
+            return str
+          } else {
+            return true
+          }
+        }
+      },
+      {
+        name: 'consumer_secret',
+        type: 'input',
+        message: 'consumer_secret',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please Command....'
+          } else if (value == 'h') {
+            var str = syan + '\n' + 'p: Post Tweet' + '\n' + 'v: View Tweet' + '\n' + 'f: Favorite Tweet' + '\n' + 'c: Clear Terminal' + '\n' + 'q: Quit Sumeshitter'
+            return str
+          } else {
+            return true
+          }
+        }
+      },
+      {
+        name: 'access_token_key',
+        type: 'input',
+        message: 'access_token_key',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please Command....'
+          } else if (value == 'h') {
+            var str = syan + '\n' + 'p: Post Tweet' + '\n' + 'v: View Tweet' + '\n' + 'f: Favorite Tweet' + '\n' + 'c: Clear Terminal' + '\n' + 'q: Quit Sumeshitter'
+            return str
+          } else {
+            return true
+          }
+        }
+      },
+      {
+        name: 'access_token_secret',
+        type: 'input',
+        message: 'access_token_secret',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please Command....'
+          } else if (value == 'h') {
+            var str = syan + '\n' + 'p: Post Tweet' + '\n' + 'v: View Tweet' + '\n' + 'f: Favorite Tweet' + '\n' + 'c: Clear Terminal' + '\n' + 'q: Quit Sumeshitter'
+            return str
+          } else {
+            return true
+          }
+        }
+      }
+    ]
+
+    resolve(inquirer.prompt(consumer_key).then(callback))
+  })
 }
 
 // コマンド受付 hでヘルプ
