@@ -3,26 +3,28 @@ var clear = require('clear')
 var CLI = require('clui')
 var figlet = require('figlet')
 var inquirer = require('inquirer')
-var Preferences = require('preferences')
 var Spinner = CLI.Spinner
 var config = require('config')
 // var GitHubApi   = require('rest');
 var _ = require('lodash')
 var files = require('./lib/files')
+var fs = require('fs')
 
 // 設定系
 const status = new Spinner('Processing, please wait...')
 const Twitter = require('twitter')
 
 // 各キーを設定する
-const client = new Twitter({
+var client = new Twitter({
   consumer_key: config.consumer_key,
   consumer_secret: config.consumer_secret,
   access_token_key: config.access_token_key,
   access_token_secret: config.access_token_secret
 })
+const screen_name = config.screen_name
+
 // screen_nameに自分のIDを設定する
-const params = { screen_name: 'smsiks', cursor: -1, tweet_mode: 'extended' }
+const params = { screen_name: screen_name, cursor: -1, tweet_mode: 'extended' }
 
 // 初期化処理
 clear()
@@ -30,10 +32,99 @@ console.log(chalk.blue(figlet.textSync('Sumeshitter', { horizontalLayout: 'full'
 
 // メイン
 const index = async argv => {
+  if (config.consumer_key == undefined) {
+    const twitterConfig = await init()
+    // configファイル書き出し
+    try {
+      fs.writeFileSync('./config/default.json', JSON.stringify(twitterConfig, undefined, 2))
+
+      console.log('write end')
+      console.log('Please Restart Sumeshitter!')
+      process.exit()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const command = await question_command()
   await awaitFunction(command)
   // 再起呼び出し
   index()
+}
+
+// コマンド受付 hでヘルプ
+const init = async callback => {
+  return new Promise(resolve => {
+    var consumer_key = [
+      {
+        name: 'Your TwitterId Here (Without "@") ',
+        type: 'input',
+        message: 'consumer_key',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please TwitterId (Ex: @aiueo -> aiueo)'
+          } else {
+            return true
+          }
+        }
+      },
+      {
+        name: 'consumer_key',
+        type: 'input',
+        message: 'consumer_key',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please consumer_key'
+          } else {
+            return true
+          }
+        }
+      },
+      {
+        name: 'consumer_secret',
+        type: 'input',
+        message: 'consumer_secret',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please consumer_secret'
+          } else {
+            return true
+          }
+        }
+      },
+      {
+        name: 'access_token_key',
+        type: 'input',
+        message: 'access_token_key',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please access_token_key'
+          } else {
+            return true
+          }
+        }
+      },
+      {
+        name: 'access_token_secret',
+        type: 'input',
+        message: 'access_token_secret',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please access_token_secret'
+          } else {
+            return true
+          }
+        }
+      }
+    ]
+
+    resolve(inquirer.prompt(consumer_key).then(callback))
+  })
 }
 
 // コマンド受付 hでヘルプ
