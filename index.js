@@ -21,8 +21,10 @@ var client = new Twitter({
   access_token_key: config.access_token_key,
   access_token_secret: config.access_token_secret
 })
+const screen_name = config.screen_name
+
 // screen_nameに自分のIDを設定する
-const params = { screen_name: 'smsiks', cursor: -1, tweet_mode: 'extended' }
+const params = { screen_name: screen_name, cursor: -1, tweet_mode: 'extended' }
 
 // 初期化処理
 clear()
@@ -52,8 +54,21 @@ const index = async argv => {
 
 // コマンド受付 hでヘルプ
 const init = async callback => {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     var consumer_key = [
+      {
+        name: 'Your TwitterId Here (Without "@") ',
+        type: 'input',
+        message: 'consumer_key',
+        validate: function(value) {
+          var syan = '\u001b[36m'
+          if (!value.length) {
+            return 'Please TwitterId (Ex: @aiueo -> aiueo)'
+          } else {
+            return true
+          }
+        }
+      },
       {
         name: 'consumer_key',
         type: 'input',
@@ -61,10 +76,7 @@ const init = async callback => {
         validate: function(value) {
           var syan = '\u001b[36m'
           if (!value.length) {
-            return 'Please Command....'
-          } else if (value == 'h') {
-            var str = syan + '\n' + 'p: Post Tweet' + '\n' + 'v: View Tweet' + '\n' + 'f: Favorite Tweet' + '\n' + 'c: Clear Terminal' + '\n' + 'q: Quit Sumeshitter'
-            return str
+            return 'Please consumer_key'
           } else {
             return true
           }
@@ -77,10 +89,7 @@ const init = async callback => {
         validate: function(value) {
           var syan = '\u001b[36m'
           if (!value.length) {
-            return 'Please Command....'
-          } else if (value == 'h') {
-            var str = syan + '\n' + 'p: Post Tweet' + '\n' + 'v: View Tweet' + '\n' + 'f: Favorite Tweet' + '\n' + 'c: Clear Terminal' + '\n' + 'q: Quit Sumeshitter'
-            return str
+            return 'Please consumer_secret'
           } else {
             return true
           }
@@ -93,10 +102,7 @@ const init = async callback => {
         validate: function(value) {
           var syan = '\u001b[36m'
           if (!value.length) {
-            return 'Please Command....'
-          } else if (value == 'h') {
-            var str = syan + '\n' + 'p: Post Tweet' + '\n' + 'v: View Tweet' + '\n' + 'f: Favorite Tweet' + '\n' + 'c: Clear Terminal' + '\n' + 'q: Quit Sumeshitter'
-            return str
+            return 'Please access_token_key'
           } else {
             return true
           }
@@ -109,10 +115,7 @@ const init = async callback => {
         validate: function(value) {
           var syan = '\u001b[36m'
           if (!value.length) {
-            return 'Please Command....'
-          } else if (value == 'h') {
-            var str = syan + '\n' + 'p: Post Tweet' + '\n' + 'v: View Tweet' + '\n' + 'f: Favorite Tweet' + '\n' + 'c: Clear Terminal' + '\n' + 'q: Quit Sumeshitter'
-            return str
+            return 'Please access_token_secret'
           } else {
             return true
           }
